@@ -69,8 +69,6 @@ class ViewController: UIViewController {
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
         
-        request.returnsObjectsAsFaults = false
-        
         do {
             
             let results = try context.fetch(request)
