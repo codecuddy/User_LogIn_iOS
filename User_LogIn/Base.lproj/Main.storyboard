@@ -40,12 +40,22 @@
                                     <action selector="logIn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ICn-0M-39e"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4g3-ib-OWm">
+                                <rect key="frame" x="164" y="241" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Home"/>
+                                <connections>
+                                    <action selector="home:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cqz-wP-lZj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="homeButton" destination="4g3-ib-OWm" id="QwY-UD-c8Y"/>
                         <outlet property="label" destination="awM-3u-d0y" id="4Z8-mf-NCd"/>
+                        <outlet property="logInButton" destination="tMK-aY-DYr" id="ZS3-Wx-tWw"/>
                         <outlet property="textField" destination="baY-dD-X9q" id="jiY-68-EMY"/>
                     </connections>
                 </viewController>
