@@ -37,30 +37,72 @@ class ViewController: UIViewController {
             homeButton.alpha = 1
             
             label.text = "Thanks for signing up, \(textField.text!)!"
-
+            print("\(textField.text!) was logged in")
         } catch {
             
             print("Failed to save new name!")
             
-            
         }
-    
+        
     }
     
     @IBOutlet weak var homeButton: UIButton!
     
     @IBAction func home(_ sender: Any) {
-        textField.alpha = 1
-        logInButton.alpha = 1
-        label.alpha = 0
-        homeButton.alpha = 0
         
-        textField.text = ""
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            
+        let context = appDelegate.persistentContainer.viewContext
+            
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
+        
+        do {
+            
+            let results = try context.fetch(request)
+
+            if results.count > 0 {
+                
+                for result in results as! [NSManagedObject] {
+                    
+                    if let username = result.value(forKey: "name") as? String {
+
+                        context.delete(result)
+
+                        do {
+                        
+                            try context.save()
+                            print("\(username) logged out")
+                        
+                        } catch {
+                        
+                            print("Individual End Session Failed")
+                            
+                        }
+                        
+                    }
+            
+                }
+                
+                textField.text = ""
+                textField.alpha = 1
+                logInButton.alpha = 1
+                label.alpha = 0
+                homeButton.alpha = 0
+            
+            }
+            
+        } catch {
+            
+            print("Did not delete user")
+            
+        }
+        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -83,6 +125,7 @@ class ViewController: UIViewController {
                     homeButton.alpha = 1
 
                     label.text = "Hey, hey, \(username)! Welcome Back!"
+                    print("\(username) is logged in")
 
                 }
                 
