@@ -17,30 +17,74 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var logInButton: UIButton!
     
+    var isLoggedIn = false
+    
     @IBAction func logIn(_ sender: Any) {
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let context = appDelegate.persistentContainer.viewContext
         
-        let newName = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
-        
-        newName.setValue(textField.text, forKey: "name")
-        
-        do {
+        if isLoggedIn {
             
-            try context.save()
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Users")
             
-            textField.alpha = 0
-            logInButton.alpha = 0
-            label.alpha = 1
-            homeButton.alpha = 1
+            do {
+                
+                let results = try context.fetch(request)
+                
+                if results.count > 0 {
+                    
+                    for result in results as! [NSManagedObject] {
+                        
+                        result.setValue(textField.text, forKey: "name")
+                        
+                        do {
+                            
+                            try context.save()
+                            
+                        } catch {
+                            
+                            print("Update username save failed")
+                            
+                        }
+                    }
+                    
+                    label.text = "Username updated to \(textField.text!)."
+                    print("\(textField.text!) is new user name.")
+                }
+                
+            } catch {
+                
+                print("Update username failed")
+                
+            }
             
-            label.text = "Thanks for signing up, \(textField.text!)!"
-            print("\(textField.text!) was logged in")
-        } catch {
+        } else {
             
-            print("Failed to save new name!")
+            let newName = NSEntityDescription.insertNewObject(forEntityName: "Users", into: context)
+            
+            newName.setValue(textField.text, forKey: "name")
+            
+            do {
+                
+                try context.save()
+                
+                //textField.alpha = 0
+                logInButton.setTitle("Update Username", for: [])
+                label.alpha = 1
+                homeButton.alpha = 1
+                label.text = "Thanks for signing up, \(textField.text!)!"
+                print("\(textField.text!) was logged in")
+                textField.text = ""
+                
+                isLoggedIn = true
+                
+            } catch {
+                
+                print("Failed to save new name!")
+                
+            }
             
         }
         
@@ -85,10 +129,12 @@ class ViewController: UIViewController {
                 
                 textField.text = ""
                 textField.alpha = 1
-                logInButton.alpha = 1
+                logInButton.setTitle("Log In", for: [])
                 label.alpha = 0
                 homeButton.alpha = 0
-            
+                
+                isLoggedIn = false
+                
             }
             
         } catch {
@@ -119,13 +165,15 @@ class ViewController: UIViewController {
                 
                 if let username = result.value(forKey: "name") as? String {
                     
-                    textField.alpha = 0
-                    logInButton.alpha = 0
+                    textField.alpha = 1
+                    logInButton.setTitle("Update Username", for: [])
                     label.alpha = 1
                     homeButton.alpha = 1
 
                     label.text = "Hey, hey, \(username)! Welcome Back!"
                     print("\(username) is logged in")
+                    
+                    isLoggedIn = true
 
                 }
                 
